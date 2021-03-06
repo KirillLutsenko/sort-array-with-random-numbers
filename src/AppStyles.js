@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 export const Title = styled.h1`
-  font-size: 1.5em;
   text-align: center;
   margin-top: 20px;
 `;
@@ -19,7 +18,7 @@ export const Button = styled.button`
   background: #fff;
   border-radius: 3px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, background 0.2s ease;
 
   &:hover {
     color: #fff;

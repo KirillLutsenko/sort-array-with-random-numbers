@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Title, Wrapper, Button, List, Item } from './AppStyles';
 
 export const App = () => {
-  const [array, setArray] = useState([]);
-  const randomLength = Math.random() * 1000 + 1000;
-
-  useEffect(() => {
+  const initHelper = () => {
     const arrayCopy = [];
+    const randomLength = Math.random() * 1000 + 1000;
 
     for (let i = 0; i < randomLength; i++) {
       const randomNumber = Math.round(Math.random() * 205);
@@ -14,43 +12,49 @@ export const App = () => {
       arrayCopy.push(randomNumber);
     }
 
-    setArray(arrayCopy);
-  }, []);
+    return arrayCopy;
+  };
 
-  const sortArray = async() => {
+  const [array, setArray] = useState(initHelper);
+  const [sortedArray, setSortedArray] = useState(false);
+
+  const bubbleSorting = useCallback(() => {
     let resOfCompare = false;
-    const copyOfArray = [...array];
+    const sortArray = [...array];
 
     while (!resOfCompare) {
       resOfCompare = true;
 
-      for (let i = 1; i < copyOfArray.length; i++) {
-        if (copyOfArray[i - 1] > copyOfArray[i]) {
+      for (let i = 1; i < sortArray.length; i++) {
+        if (sortArray[i - 1] > sortArray[i]) {
           resOfCompare = false;
 
-          const prev = copyOfArray[i - 1];
-          const next = copyOfArray[i];
+          const prev = sortArray[i - 1];
+          const next = sortArray[i];
 
-          copyOfArray[i - 1] = next;
-          copyOfArray[i] = prev;
+          sortArray[i - 1] = next;
+          sortArray[i] = prev;
         }
       }
     }
 
-    setArray(copyOfArray);
-  };
+    setArray(sortArray);
+    setSortedArray(true);
+  }, [array]);
 
   return (
     <div>
       <Title>Sorting Array</Title>
 
       <Wrapper>
-        <Button
-          type="button"
-          onClick={sortArray}
-        >
-          Sort Array
-        </Button>
+        {!sortedArray && (
+          <Button
+            type="button"
+            onClick={bubbleSorting}
+          >
+            Sort Array
+          </Button>
+        )}
 
         <List>
           {array.map((number, index) => (
