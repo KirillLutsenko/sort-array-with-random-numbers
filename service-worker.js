@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/sort-array-with-random-numbers/precache-manifest.b541a0f897da161deb84df3f58942967.js"
+  "/sort-array-with-random-numbers/precache-manifest.d9a3ffd079a98ff1fe2f854c3b9fb872.js"
 );
 
 self.addEventListener('message', (event) => {
