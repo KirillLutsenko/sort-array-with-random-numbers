@@ -1,66 +1,101 @@
-import React, { useState, useCallback } from 'react';
-import { Title, Wrapper, Button, List, Item } from './AppStyles';
+import React, { useState } from 'react';
+import { getBubbleSortingAnimations } from './algorithms/bubbleSorting';
+import { Title, Wrapper, Button, List, Item, Buttons } from './AppStyles';
 
 export const App = () => {
-  const initHelper = () => {
-    const arrayCopy = [];
-    const randomLength = Math.random() * 1000 + 1000;
+  const [array, setArray] = useState([]);
+  const [sortedArray, setSortedArray] = useState(false);
+  const [generateArray, setGenerateArray] = useState(false);
 
-    for (let i = 0; i < randomLength; i++) {
+  const arrayGeneration = () => {
+    const arrayCopy = [];
+    const randomLength = Math.random() * 100 + 100;
+
+    for (let i = 0; i < randomLength; i += 1) {
       const randomNumber = Math.round(Math.random() * 205);
 
       arrayCopy.push(randomNumber);
     }
 
-    return arrayCopy;
+    setArray(arrayCopy);
+    setSortedArray(false);
+    setGenerateArray(true);
   };
 
-  const [array, setArray] = useState(initHelper);
-  const [sortedArray, setSortedArray] = useState(false);
+  const sleep = ms => new Promise(
+    resolve => setTimeout(resolve, ms),
+  );
 
-  const bubbleSorting = useCallback(() => {
-    let resOfCompare = false;
-    const sortArray = [...array];
+  const parseAnimations = async(animations) => {
+    for (const animation of animations) {
+      const { type, data, arr } = animation;
+      const [i, j] = data;
 
-    while (!resOfCompare) {
-      resOfCompare = true;
-
-      for (let i = 1; i < sortArray.length; i++) {
-        if (sortArray[i - 1] > sortArray[i]) {
-          resOfCompare = false;
-
-          const prev = sortArray[i - 1];
-          const next = sortArray[i];
-
-          sortArray[i - 1] = next;
-          sortArray[i] = prev;
-        }
+      if (type === 'swap') {
+        document.querySelector(`#item-${i}`).style.backgroundColor = '#ff0000';
+        document.querySelector(`#item-${j}`).style.backgroundColor = '#ff0000';
+      } else if (type === 'select') {
+        document.querySelector(`#item-${i}`).style.backgroundColor = '#0c8e3e';
+        document.querySelector(`#item-${j}`).style.backgroundColor = '#ff0000';
       }
+
+      await sleep(5);
+
+      if (type === 'swap' && arr) {
+        setArray(arr);
+      }
+
+      document.querySelector(`#item-${i}`).style.backgroundColor = '#000000';
+      document.querySelector(`#item-${j}`).style.backgroundColor = '#000000';
     }
 
-    setArray(sortArray);
+    await setGenerateArray(false);
+  };
+
+  const bubbleSorting = async(alg) => {
+    let animations = [];
+
     setSortedArray(true);
-  }, [array]);
+
+    if (alg === 'select') {
+      animations = getBubbleSortingAnimations(array);
+    }
+
+    await parseAnimations(animations);
+  };
 
   return (
     <div>
       <Title>Sorting Array</Title>
 
       <Wrapper>
-        {!sortedArray && (
-          <Button
-            type="button"
-            onClick={bubbleSorting}
-          >
-            Sort Array
-          </Button>
-        )}
+        <Buttons>
+          {!generateArray && (
+            <Button
+              type="button"
+              onClick={arrayGeneration}
+            >
+              Generate new Array
+            </Button>
+          )}
+
+          {!sortedArray && (
+            <Button
+              type="button"
+              onClick={() => bubbleSorting('select')}
+            >
+              Sort Array
+            </Button>
+          )}
+        </Buttons>
 
         <List>
           {array.map((number, index) => (
-            <Item key={index}>
-              {number}
-            </Item>
+            <Item
+              key={index}
+              style={{ height: `${number}px` }}
+              id={`item-${index}`}
+            />
           ))}
         </List>
       </Wrapper>

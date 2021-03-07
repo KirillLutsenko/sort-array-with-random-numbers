@@ -13,8 +13,10 @@ export const Wrapper = styled.section`
 `;
 
 export const Button = styled.button`
-  width: 100px;
-  height: 30px;
+  text-align: center;
+  padding: 5px 10px;
+  margin-right: 5px;
+  border: 1px solid black;
   background: #fff;
   border-radius: 3px;
   cursor: pointer;
@@ -26,11 +28,19 @@ export const Button = styled.button`
   }
 `;
 
-export const List = styled.ul`
-  margin: 20px 0;
+export const List = styled.div`
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  margin: 20px;
 `;
 
-export const Item = styled.li`
-  text-align: center;
-  font-size: 18px;
+export const Item = styled.div`
+  width: 0.3vw;
+  background: #000;
+  margin-right: 2px;
+`;
+
+export const Buttons = styled.div`
+  display: flex;
 `;
